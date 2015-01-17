@@ -14,10 +14,12 @@ scala_nats currently supports following Java Platforms :
 
 ## Getting Started
 
-- Install [java_nats](https://github.com/tyagihas/java_nats) and add "java_nats-\<version\>.jar" to CLASSPATH.
+- Install [java_nats](https://github.com/tyagihas/java_nats) and modify CLASSPATH
+- Download source files from scala_nats
 
-- Download source files or adding dependency to Maven pom.xml
+Or
 
+- Adding dependency to Maven pom.xml
 ```xml
 <dependency>
 	<groupId>com.github.tyagihas</groupId>
@@ -56,22 +58,90 @@ conn.subscribe("help", (msg:Msg) => {conn.publish(msg.reply, "I can help!")})
 conn.close();
 ```
 
+## Wildcard Subcriptions
+
+```scala
+// "*" matches any token, at any level of the subject.
+conn.subscribe("foo.*.baz", (msg:Msg) => {println("Received a message on [" + msg.subject + "] : " + msg.body)})
+
+conn.subscribe("foo.bar.*", (msg:Msg) => {println("Received a message on [" + msg.subject + "] : " + msg.body)})
+
+conn.subscribe("*.bar.*", (msg:Msg) => {println("Received a message on [" + msg.subject + "] : " + msg.body)})
+
+// ">" matches any length of the tail of a subject, and can only be the last token
+// E.g. 'foo.>' will match 'foo.bar', 'foo.bar.baz', 'foo.foo.bar.bax.22'
+conn.subscribe("foo.>", (msg:Msg) => {println("Received a message on [" + msg.subject + "] : " + msg.body)})
+```
+
+## Advanced Usage
+
+```scala
+conn.publish("foo", "You done?", () => {println("Message processed!")})
+
+// Timeouts for subscriptions
+var received = 0
+var sid : Integer = conn.subscribe("foo", (msg:Msg) => {received += 1})
+
+conn.timeout(sid, TIMEOUT_IN_SECS, null, (o:Object) => {println("Timeout waiting for a message!")})
+
+// Timeout unless a certain number of messages have been received
+var opt : Properties = new Properties;
+opt.put("expected", new Integer(2));
+conn.timeout(sid, 10, opt, (o:Object) => {timeout_recv = true})
+
+// Auto-unsubscribe after MAX_WANTED messages received
+conn.unsubscribe(sid, MAX_WANTED)
+
+// Multiple connections
+conn1.subscribe("test", (msg:Msg) => {println("received : " + msg.body)})
+
+// Form second connection to send message on
+var conn2 = Conn.connect(new Properties, (conn:Object) => {conn.asInstanceOf[Conn].publish("test", "Hello World")})
+```
+
 ## Clustered Usage
 
 ```scala
 var opts : Properties = new Properties
 opts.put("servers", "nats://user1:pass1@server1,nats://user1:pass1@server2:4243");
 var conn = Conn.connect(opts)
-		
+
 println("Publishing...")
 conn.publish("hello", "world")
+```
+
+## Advanced Usage
+
+```java
+// Publish with closure, callback fires when server has processed the message
+conn.publish("foo", "You done?", () => {println("Message processed!")})
+
+// Timeouts for subscriptions
+int received = 0;
+sid : Integer = conn.subscribe("foo", () => {received++})
+
+conn.timeout(sid, TIMEOUT_IN_SECS, () => {timeout_recv = true})
+
+// Timeout unless a certain number of messages have been received
+Properties opt = new Properties;
+opt.put("expected", new Integer(2));
+conn.timeout(sid, 10, opt, () => {timeout_recv = true})
+
+// Auto-unsubscribe after MAX_WANTED messages received
+conn.unsubscribe(sid, MAX_WANTED)
+
+// Multiple connections
+conn1.subscribe("test", (msg:Msg) => {println("received : " + msg.body)})
+
+// Form second connection to send message on
+var conn2 = Conn.connect(new Properties, (conn:Object) => {conn.asInstanceOf[Conn].publish("test", "Hello World")})
 ```
 
 ## License
 
 (The MIT License)
 
-Copyright (c) 2014-2015 Teppei Yagihashi
+Copyright (c) 2015 Teppei Yagihashi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to

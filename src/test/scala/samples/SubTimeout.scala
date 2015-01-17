@@ -10,7 +10,7 @@ object SubTimeout {
 	  
 		println("Listening on : " + args(0))
 		var received = 0
-		var sid : Integer = conn.subscribe(args(0), (data:Msg) => {received += 1})
+		var sid : Integer = conn.subscribe(args(0), (msg:Msg) => {received += 1})
 		
 		conn.timeout(sid, 1, null, (o:Object) => {println("Timeout waiting for a message!")})
 		

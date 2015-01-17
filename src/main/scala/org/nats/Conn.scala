@@ -6,9 +6,13 @@ class Conn private (pprops : Properties, handler : MsgHandler) extends Connectio
 	val version: String = "0.1"	
 
 	// Instance variables and methods
-	def publish(subject : String, msg : String, opt_reply : String = null, handler : => Unit) {
+	def publish(subject : String, msg : String, handler : () => Unit = null) {
+		this.publish(subject, msg, null, handler)
+	}
+	
+	def publish(subject : String, msg : String, opt_reply : String, handler : () => Unit) {
 		this.publish(subject, msg, new MsgHandler {
-			override def execute { handler }
+			override def execute() { handler() }
 		})
 	}
 
@@ -57,7 +61,7 @@ object Conn {
 	def connect(popts : Properties, handler : Object => Unit = null) : Conn = { 
 		var mhandler : MsgHandler = null
 		if (handler != null) mhandler = new MsgHandler {
-				override def execute(o : Object) { handler(o.asInstanceOf[Connection]) }
+				override def execute(o : Object) { handler(o.asInstanceOf[Conn]) }
 		}
 		
 		Connection.init(popts)
