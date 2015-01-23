@@ -5,27 +5,27 @@ Scala client library for the [NATS messaging system](http://nats.io).
 ## Supported Platforms
 
 ```javascript
-scala_nats currently supports following Java Platforms :
-
-- Java Platform, Standard Edition 6 (Java SE 6)
-- Java Platform, Standard Edition 7 (Java SE 7)
 - Scala 2.10.4+
 ```
 
 ## Getting Started
 
-- Install [java_nats](https://github.com/tyagihas/java_nats) and modify CLASSPATH
+- Install [java_nats](https://github.com/tyagihas/java_nats) and add "java_nats-<version>.jar" to CLASSPATH
 - Download source files from scala_nats
 
-Or
+OR
 
-- Adding dependency to Maven pom.xml
+- Adding dependency
 ```xml
+// Maven pom.xml
 <dependency>
 	<groupId>com.github.tyagihas</groupId>
-	<artifactId>scala_nats</artifactId>
+	<artifactId>scala_nats_2.10</artifactId>
 	<version>0.1</version>
 </dependency>
+
+// SBT build.sbt
+libraryDependencies += "com.github.tyagihas" % "scala_nats_2.10" % "0.1"
 ```
 
 ## Basic Usage
