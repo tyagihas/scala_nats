@@ -10,7 +10,7 @@ Scala client library for the [NATS messaging system](http://nats.io).
 
 ## Getting Started
 
-- Install [java_nats](https://github.com/tyagihas/java_nats) and add "java_nats-<version>.jar" to CLASSPATH
+- Install [java_nats](https://github.com/tyagihas/java_nats) and add "java_nats-\<version\>.jar" to CLASSPATH
 - Download source files from scala_nats
 
 OR
