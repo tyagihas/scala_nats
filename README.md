@@ -73,6 +73,17 @@ conn.subscribe("*.bar.*", (msg:Msg) => {println("Received a message on [" + msg.
 conn.subscribe("foo.>", (msg:Msg) => {println("Received a message on [" + msg.subject + "] : " + msg.body)})
 ```
 
+## Clustered Usage
+
+```scala
+var opts : Properties = new Properties
+opts.put("servers", "nats://user1:pass1@server1,nats://user1:pass1@server2:4243");
+var conn = Conn.connect(opts)
+
+println("Publishing...")
+conn.publish("hello", "world")
+```
+
 ## Advanced Usage
 
 ```scala
@@ -88,44 +99,6 @@ conn.timeout(sid, TIMEOUT_IN_SECS, null, (o:Object) => {println("Timeout waiting
 var opt : Properties = new Properties;
 opt.put("expected", new Integer(2));
 conn.timeout(sid, 10, opt, (o:Object) => {timeout_recv = true})
-
-// Auto-unsubscribe after MAX_WANTED messages received
-conn.unsubscribe(sid, MAX_WANTED)
-
-// Multiple connections
-conn1.subscribe("test", (msg:Msg) => {println("received : " + msg.body)})
-
-// Form second connection to send message on
-var conn2 = Conn.connect(new Properties, (conn:Object) => {conn.asInstanceOf[Conn].publish("test", "Hello World")})
-```
-
-## Clustered Usage
-
-```scala
-var opts : Properties = new Properties
-opts.put("servers", "nats://user1:pass1@server1,nats://user1:pass1@server2:4243");
-var conn = Conn.connect(opts)
-
-println("Publishing...")
-conn.publish("hello", "world")
-```
-
-## Advanced Usage
-
-```java
-// Publish with closure, callback fires when server has processed the message
-conn.publish("foo", "You done?", () => {println("Message processed!")})
-
-// Timeouts for subscriptions
-int received = 0;
-sid : Integer = conn.subscribe("foo", () => {received++})
-
-conn.timeout(sid, TIMEOUT_IN_SECS, () => {timeout_recv = true})
-
-// Timeout unless a certain number of messages have been received
-Properties opt = new Properties;
-opt.put("expected", new Integer(2));
-conn.timeout(sid, 10, opt, () => {timeout_recv = true})
 
 // Auto-unsubscribe after MAX_WANTED messages received
 conn.unsubscribe(sid, MAX_WANTED)
