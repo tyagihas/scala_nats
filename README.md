@@ -16,6 +16,7 @@ Scala client library for the [NATS messaging system](http://nats.io).
 OR
 
 - Adding dependency
+
 ```xml
 // Maven pom.xml
 <dependency>
