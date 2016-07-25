@@ -20,8 +20,8 @@ IN THE SOFTWARE.
 
 package org.nats
 
-class Msg  (pbody : String = null, preply : String = null, psubject : String = null) {
-		var body : String = pbody
+class MsgB  (pbody : Array[Byte] = null, preply : String = null, psubject : String = null) {
+		var body : Array[Byte] = pbody
 		var reply : String = preply
 		var subject : String = psubject
 }

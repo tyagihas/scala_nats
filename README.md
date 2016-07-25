@@ -5,7 +5,7 @@ Scala client library for the [NATS messaging system](http://nats.io).
 ## Supported Platforms
 
 ```javascript
-- Scala 2.10.4+
+- Scala 2.11.8+
 ```
 
 ## Getting Started
@@ -20,13 +20,13 @@ OR
 ```xml
 // Maven pom.xml
 <dependency>
-	<groupId>com.github.tyagihas</groupId>
-	<artifactId>scala_nats_2.10</artifactId>
-	<version>0.1</version>
+  <groupId>com.github.tyagihas</groupId>
+  <artifactId>scala_nats_2.11</artifactId>
+  <version>0.2</version>
 </dependency>
 
 // SBT build.sbt
-libraryDependencies += "com.github.tyagihas" % "scala_nats_2.10" % "0.1"
+libraryDependencies += "com.github.tyagihas" % "scala_nats_2.11" % "0.2"
 ```
 
 ## Basic Usage
@@ -55,7 +55,7 @@ conn.request("help", (msg:Msg) => {
 
 // Replies
 conn.subscribe("help", (msg:Msg) => {conn.publish(msg.reply, "I can help!")})
-				
+
 conn.close();
 ```
 
@@ -83,6 +83,14 @@ var conn = Conn.connect(opts)
 
 println("Publishing...")
 conn.publish("hello", "world")
+```
+
+## Binary Messages
+
+```scala
+conn.subscribe("test", (msg:MsgB) => {println("Received update as binary : " + new String(msg.body))})
+
+conn.publish("test", "Hello World".getBytes)
 ```
 
 ## Advanced Usage
@@ -115,7 +123,7 @@ var conn2 = Conn.connect(new Properties, (conn:Object) => {conn.asInstanceOf[Con
 
 (The MIT License)
 
-Copyright (c) 2015 Teppei Yagihashi
+Copyright (c) 2015-2016 Teppei Yagihashi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
@@ -134,5 +142,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
-
-

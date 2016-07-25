@@ -1,35 +1,77 @@
+/**
+The MIT License (MIT)
+Copyright (c) 2015-2016 Teppei Yagihashi
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
+**/
+
 package org.nats
 
 import java.util.Properties
+import org.nats.common.Constants
+import scala.reflect.runtime.universe.{typeOf, TypeTag}
 
 class Conn private (pprops : Properties, handler : MsgHandler) extends Connection(pprops, handler) {
-	val version: String = "0.1"	
+	val version: String = "0.2"	
 
-	// Instance variables and methods
-	def publish(subject : String, msg : String, handler : () => Unit = null) {
-		this.publish(subject, msg, null, handler)
+	def publish(subject : String, msg : String, handler : () => Unit) {
+		this.publish(subject, null, msg, handler)
 	}
 	
-	def publish(subject : String, msg : String, opt_reply : String, handler : () => Unit) {
-		this.publish(subject, msg, new MsgHandler {
+	def publish(subject : String, opt_reply : String, msg : String, handler : () => Unit) {
+		this.publish(subject, msg, opt_reply, new MsgHandler {
 			override def execute() { handler() }
 		})
 	}
-
-	def subscribe(subject : String, handler : Msg => Unit) : Integer = {
-		return this.subscribe(subject, null, handler)
+	
+	def publish(subject : String, msg : Array[Byte], handler : () => Unit) {
+		this.publish(subject, null, msg, handler)
 	}
-	  
-	def subscribe(subject : String, popts : Properties, handler : Msg => Unit) : Integer = {
-		return this.subscribe(subject, popts, new MsgHandler {
-			override def execute(msg : String, replyTo : String, subject : String) {
-				handler(new Msg(msg, replyTo, subject))
-			}
+
+	def publish(subject : String, opt_reply : String, msg : Array[Byte], handler : () => Unit) {
+		this.publish(subject, opt_reply, msg, new MsgHandler {
+		  override def execute() { handler() }
 		})
 	}
 
+	def subscribe[T : TypeTag](subject : String, handler : T => Unit) : Integer = {
+		return this.subscribe(subject, null, handler)
+	}
+	  
+	def subscribe[T : TypeTag](subject : String, popts : Properties, handler : T => Unit) : Integer = {
+	  if (typeOf[T] =:= typeOf[org.nats.MsgB]) {
+	    var f = handler.asInstanceOf[MsgB => Unit]
+		  return this.subscribe(subject, popts, new MsgHandler {
+			  override def execute(msg : Array[Byte], replyTo : String, subject : String) {
+				  f(new MsgB(msg, replyTo, subject))
+			  }
+		  })
+	  }
+		else {
+		  var f = handler.asInstanceOf[Msg => Unit]
+		  return this.subscribe(subject, popts, new MsgHandler {
+			  override def execute(msg : String, replyTo : String, subject : String) {
+				  f(new Msg(msg, replyTo, subject))
+			  }
+		  })
+		}
+	}
+
 	def request(subject : String, handler : Msg => Unit) : Integer = {
-		return this.request(subject, Connection.EMPTY, null, handler);
+		return this.request(subject, Constants.EMPTY, null, handler);
 	}
 	
 	def request(subject : String, data : String, popts : Properties, handler : Msg => Unit) : Integer = {
@@ -55,9 +97,7 @@ class Conn private (pprops : Properties, handler : MsgHandler) extends Connectio
 	override def getVersion : String = { return version }
 }
 
-// Static methods
 object Conn {
-  
 	def connect(popts : Properties, handler : Object => Unit = null) : Conn = { 
 		var mhandler : MsgHandler = null
 		if (handler != null) mhandler = new MsgHandler {
