@@ -1,5 +1,5 @@
 scalaVersion := "2.11.8"
-version := "0.2"
+version := "0.2.1"
 crossScalaVersions := List("2.11.8")
 name := "scala_nats"
 organization := "com.github.tyagihas"
