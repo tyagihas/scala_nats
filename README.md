@@ -22,11 +22,11 @@ OR
 <dependency>
   <groupId>com.github.tyagihas</groupId>
   <artifactId>scala_nats_2.11</artifactId>
-  <version>0.2</version>
+  <version>0.2.1</version>
 </dependency>
 
 // SBT build.sbt
-libraryDependencies += "com.github.tyagihas" % "scala_nats_2.11" % "0.2"
+libraryDependencies += "com.github.tyagihas" % "scala_nats_2.11" % "0.2.1"
 ```
 
 ## Basic Usage

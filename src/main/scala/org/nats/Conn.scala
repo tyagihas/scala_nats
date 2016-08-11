@@ -24,8 +24,9 @@ import java.util.Properties
 import org.nats.common.Constants
 import scala.reflect.runtime.universe.{typeOf, TypeTag}
 
-class Conn private (pprops : Properties, handler : MsgHandler) extends Connection(pprops, handler) {
-	val version: String = "0.2"	
+class Conn private (pprops : Properties, connHandler : MsgHandler, disconnHandler : MsgHandler)
+           extends Connection(pprops, connHandler, disconnHandler) {
+	val version: String = "0.2.1"
 
 	def publish(subject : String, msg : String, handler : () => Unit) {
 		this.publish(subject, null, msg, handler)
@@ -98,13 +99,19 @@ class Conn private (pprops : Properties, handler : MsgHandler) extends Connectio
 }
 
 object Conn {
-	def connect(popts : Properties, handler : Object => Unit = null) : Conn = { 
-		var mhandler : MsgHandler = null
-		if (handler != null) mhandler = new MsgHandler {
-				override def execute(o : Object) { handler(o.asInstanceOf[Conn]) }
+	def connect(popts : Properties,
+	            connHandler : Object => Unit = null,
+	            disconnHandler : Object => Unit = null) : Conn = {
+		var cHandler, dHandler : MsgHandler = null
+		if (connHandler != null) cHandler = new MsgHandler {
+				override def execute(o : Object) { connHandler(o.asInstanceOf[Conn]) }
+		}
+
+		if (disconnHandler != null) dHandler = new MsgHandler {
+				override def execute(o : Object) { disconnHandler(o.asInstanceOf[Conn]) }
 		}
 		
 		Connection.init(popts)
-		return new Conn(popts, mhandler) 
+		return new Conn(popts, cHandler, dHandler)
 	}
-}	
+}

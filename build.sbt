@@ -7,13 +7,13 @@ description := "scala_nats"
 
 publishMavenStyle := true
 libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.11.8"
-libraryDependencies += "com.github.tyagihas" % "java_nats" % "0.6.0"
+libraryDependencies += "com.github.tyagihas" % "java_nats" % "0.6.1"
 publishArtifact in Test := false
 
 lazy val root = (project in file(".")).
   settings(
     name := "scala_nats",
-    version := "0.2",
+    version := "0.2.1",
     scalaVersion := "2.11.8"
 )
 
