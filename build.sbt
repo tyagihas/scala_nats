@@ -1,5 +1,5 @@
 scalaVersion := "2.11.8"
-version := "0.2.1"
+version := "0.3.0"
 crossScalaVersions := List("2.11.8")
 name := "scala_nats"
 organization := "com.github.tyagihas"
@@ -7,13 +7,13 @@ description := "scala_nats"
 
 publishMavenStyle := true
 libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.11.8"
-libraryDependencies += "com.github.tyagihas" % "java_nats" % "0.6.1"
+libraryDependencies += "com.github.tyagihas" % "java_nats" % "0.7.1"
 publishArtifact in Test := false
 
 lazy val root = (project in file(".")).
   settings(
     name := "scala_nats",
-    version := "0.2.1",
+    version := "0.3.0",
     scalaVersion := "2.11.8"
 )
 

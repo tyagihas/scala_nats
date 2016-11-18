@@ -26,7 +26,7 @@ import scala.reflect.runtime.universe.{typeOf, TypeTag}
 
 class Conn private (pprops : Properties, connHandler : MsgHandler, disconnHandler : MsgHandler)
            extends Connection(pprops, connHandler, disconnHandler) {
-	val version: String = "0.2.1"
+	val version: String = "0.3.0"
 
 	def publish(subject : String, msg : String, handler : () => Unit) {
 		this.publish(subject, null, msg, handler)

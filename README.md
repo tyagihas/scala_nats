@@ -22,11 +22,11 @@ OR
 <dependency>
   <groupId>com.github.tyagihas</groupId>
   <artifactId>scala_nats_2.11</artifactId>
-  <version>0.2.1</version>
+  <version>0.3.0</version>
 </dependency>
 
 // SBT build.sbt
-libraryDependencies += "com.github.tyagihas" % "scala_nats_2.11" % "0.2.1"
+libraryDependencies += "com.github.tyagihas" % "scala_nats_2.11" % "0.3.0"
 ```
 
 ## Basic Usage
@@ -117,6 +117,24 @@ conn1.subscribe("test", (msg:Msg) => {println("received : " + msg.body)})
 
 // Form second connection to send message on
 var conn2 = Conn.connect(new Properties, (conn:Object) => {conn.asInstanceOf[Conn].publish("test", "Hello World")})
+```
+
+## TLS
+
+* Use "keytool" to create TrustStore and KeyStore (if necessary) or specify existing ones in next step.
+
+* Set properties to configure TrustStore and KeyStore.
+
+```scala
+var props = new Properties
+props.put("truststore", "./truststore");
+props.put("truststore_pass", "password");
+// KeyStore is used only when tlsverify is set on the server.
+props.put("keystore", "./keystore");
+props.put("keystore_pass", "password");
+
+// Automatically detect if TLS is configured on the server.
+var conn = Conn.connect(props)
 ```
 
 ## License
