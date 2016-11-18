@@ -100,8 +100,8 @@ class Conn private (pprops : Properties, connHandler : MsgHandler, disconnHandle
 
 object Conn {
 	def connect(popts : Properties,
-	            connHandler : Object => Unit = null,
-	            disconnHandler : Object => Unit = null) : Conn = {
+	    connHandler : Object => Unit = null,
+	    disconnHandler : Object => Unit = null) : Conn = {
 		var cHandler, dHandler : MsgHandler = null
 		if (connHandler != null) cHandler = new MsgHandler {
 				override def execute(o : Object) { connHandler(o.asInstanceOf[Conn]) }

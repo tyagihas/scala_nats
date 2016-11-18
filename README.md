@@ -127,11 +127,11 @@ var conn2 = Conn.connect(new Properties, (conn:Object) => {conn.asInstanceOf[Con
 
 ```scala
 var props = new Properties
-props.put("truststore", "./truststore");
-props.put("truststore_pass", "password");
+props.put("truststore", "./truststore")
+props.put("truststore_pass", "password")
 // KeyStore is used only when tlsverify is set on the server.
-props.put("keystore", "./keystore");
-props.put("keystore_pass", "password");
+props.put("keystore", "./keystore")
+props.put("keystore_pass", "password")
 
 // Automatically detect if TLS is configured on the server.
 var conn = Conn.connect(props)
