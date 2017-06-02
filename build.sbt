@@ -1,19 +1,34 @@
-import sbtrelease._
-import ReleaseStateTransformations._
-
-releaseSettings
-sonatypeSettings
-scalaVersion := "2.10.4"
-version := "0.1"
-crossScalaVersions := List("2.9.3", "2.10.4")
+scalaVersion := "2.11.8"
+version := "0.3.0"
+crossScalaVersions := List("2.11.8")
 name := "scala_nats"
 organization := "com.github.tyagihas"
 description := "scala_nats"
 
 publishMavenStyle := true
-libraryDependencies += "com.github.tyagihas" % "java_nats" % "0.5.1"
+libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.11.8"
+libraryDependencies += "com.github.tyagihas" % "java_nats" % "0.7.1"
 publishArtifact in Test := false
 
+lazy val root = (project in file(".")).
+  settings(
+    name := "scala_nats",
+    version := "0.3.0",
+    scalaVersion := "2.11.8"
+)
+
+resolvers += "sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
+resolvers += "Sonatype release Repository" at "http://oss.sonatype.org/service/local/staging/deploy/maven2/"
+resolvers += "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository"
+
+publishTo := {
+  val nexus = "https://oss.sonatype.org/"
+  if (isSnapshot.value)
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  else
+    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+}
+    
 pomExtra := (
 <url>https://github.com/tyagihas/scala_nats</url>
 <licenses>
@@ -35,22 +50,4 @@ pomExtra := (
 		<url>https://github.com/tyagihas</url>
 	</developer>
 </developers>
-)
-scalacOptions ++= Seq("-deprecation", "-Xlint", "-unchecked")
-ReleaseKeys.releaseProcess := Seq[ReleaseStep](
-checkSnapshotDependencies,
-inquireVersions,
-runClean,
-runTest,
-setReleaseVersion,
-commitReleaseVersion,
-tagRelease,
-ReleaseStep(
-action = state => Project.extract(state).runTask(PgpKeys.publishSigned, state)._1,
-enableCrossBuild = true
-),
-setNextVersion,
-commitNextVersion,
-ReleaseStep(state => Project.extract(state).runTask(SonatypeKeys.sonatypeReleaseAll, state)._1),
-pushChanges
 )
