@@ -93,6 +93,21 @@ conn.subscribe("test", (msg:MsgB) => {println("Received update as binary : " + n
 conn.publish("test", "Hello World".getBytes)
 ```
 
+## Queues Groups
+
+```scala
+// All subscriptions with the same queue name will form a queue group
+// Each message will be delivered to only one subscriber per queue group, queuing semantics
+// You can have as many queue groups as you wish
+// Normal subscribers will continue to work as expected.
+var opts : Properties = new Properties
+opts.put("queue", "job.workers");
+var conn = Conn.connect(opts)
+
+conn.subscribe("help", (msg:Msg) => {
+  println("Msg received only once through the 'job.workers' queue: " + msg.body)})
+```
+
 ## Advanced Usage
 
 ```scala
