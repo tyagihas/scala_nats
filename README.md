@@ -5,7 +5,7 @@ Scala client library for the [NATS messaging system](http://nats.io).
 ## Supported Platforms
 
 ```javascript
-- Scala 2.11.8+
+- Scala 2.11.8+ and 2.12+
 ```
 
 ## Getting Started
