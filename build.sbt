@@ -1,12 +1,18 @@
-scalaVersion := "2.11.8"
+scalaVersion := "2.12.2"
 version := "0.3.0"
-crossScalaVersions := List("2.11.8")
+crossScalaVersions := List("2.11.8", "2.12.2")
 name := "scala_nats"
 organization := "com.github.tyagihas"
 description := "scala_nats"
 
+def scalaReflection(scalaVersion: String) =
+  (scalaVersion match {
+    case "2.11.8" => "org.scala-lang" % "scala-reflect" % "2.11.8"
+    case _        => "org.scala-lang" % "scala-reflect" % "2.12.2"
+  }) % "compile"
+
 publishMavenStyle := true
-libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.11.8"
+libraryDependencies <++=  scalaVersion(v => Seq(scalaReflection(v)))
 libraryDependencies += "com.github.tyagihas" % "java_nats" % "0.7.1"
 publishArtifact in Test := false
 
@@ -14,8 +20,8 @@ lazy val root = (project in file(".")).
   settings(
     name := "scala_nats",
     version := "0.3.0",
-    scalaVersion := "2.11.8"
-)
+    scalaVersion := "2.12.2"
+)   
 
 resolvers += "sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 resolvers += "Sonatype release Repository" at "http://oss.sonatype.org/service/local/staging/deploy/maven2/"
