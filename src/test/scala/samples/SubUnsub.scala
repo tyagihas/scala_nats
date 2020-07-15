@@ -12,7 +12,7 @@ object SubUnsub {
 		var sid : Integer = conn.subscribe(args(0), (msg:Msg) => {println("Received update : " + msg.body)})
 		
 		println("\nPress enter to unsubscribe.")
-		readLine
+		scala.io.StdIn.readLine
 		conn.unsubscribe(sid);
 		
 		conn.close

@@ -2,10 +2,11 @@
 
 Scala client library for the [NATS messaging system](http://nats.io).
 
-## Supported Platforms
+## Platforms
 
+scala_nats has been tested with following Scala versions :
 ```javascript
-- Scala 2.11.8+ and 2.12+
+- Scala 2.13.3
 ```
 
 ## Getting Started
@@ -21,12 +22,12 @@ OR
 // Maven pom.xml
 <dependency>
   <groupId>com.github.tyagihas</groupId>
-  <artifactId>scala_nats_2.11</artifactId>
-  <version>0.3.0</version>
+  <artifactId>scala_nats</artifactId>
+  <version>0.4.0</version>
 </dependency>
 
 // SBT build.sbt
-libraryDependencies += "com.github.tyagihas" % "scala_nats_2.11" % "0.3.0"
+libraryDependencies += "com.github.tyagihas" % "scala_nats" % "0.4.0"
 ```
 
 ## Basic Usage
@@ -156,7 +157,7 @@ var conn = Conn.connect(props)
 
 (The MIT License)
 
-Copyright (c) 2015-2017 Teppei Yagihashi
+Copyright (c) 2015-2020 Teppei Yagihashi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to

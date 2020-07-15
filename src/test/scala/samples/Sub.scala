@@ -12,7 +12,7 @@ object Sub {
 		conn.subscribe(args(0), (msg:Msg) => {println("Received update : " + msg.body)})
 		
 		println("\nPress enter to exit.")
-		readLine
+		scala.io.StdIn.readLine
 		
 		conn.close
 		sys.exit

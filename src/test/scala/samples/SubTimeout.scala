@@ -15,7 +15,7 @@ object SubTimeout {
 		conn.timeout(sid, 1, null, (o:Object) => {println("Timeout waiting for a message!")})
 		
 		println("\nPress enter to exit.")
-		readLine
+		scala.io.StdIn.readLine
 		
 		conn.close
 		sys.exit

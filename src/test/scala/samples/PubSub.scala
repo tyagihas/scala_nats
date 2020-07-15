@@ -16,7 +16,7 @@ object PubSub {
 		conn.publish(args(0) + "_bin", "test".getBytes)
 		
 		println("\nPress enter to exit.")
-		readLine
+		scala.io.StdIn.readLine
 		
 		conn.close
 		sys.exit

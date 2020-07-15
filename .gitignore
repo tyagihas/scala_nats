@@ -19,6 +19,7 @@ project/plugins/project/
 
 .project
 /project
-keystore
-truststore
+keystore.jks
+truststore.jks
 .cache*
+src/test/scala/project/
